@@ -83,7 +83,10 @@ class Catchpoint(object):
             'Authorization': "Bearer " + base64.b64encode(self._token)
         }
         try:
-            r = requests.get(uri, headers=headers, params=params, data=data)
+            if data is None:
+                r = requests.get(uri, headers=headers, params=params)
+            else:
+                r = requests.post(uri, headers=headers, params=params, data=data)
             if r.status_code != 200:
                 raise CatchpointError(r.content)
         except requests.ConnectionError, e:
